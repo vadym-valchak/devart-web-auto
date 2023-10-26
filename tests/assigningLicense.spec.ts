@@ -1,9 +1,10 @@
 import { test } from './../fixtures/fixture';
 import { mailHelper } from '../helpers/mail.helper';
 import { expect } from '@playwright/test';
-import { DurationEnum, PurchaseType } from '../test_data/parameters.enum';
+import { DurationEnum, Edition, PurchaseType, Currency } from '../test_data/parameters.enum';
 import { users } from '../test_data/users';
-
+import { IProductCartModel } from '../test_data/IProductCart';
+ 
 const licenseOwner = users.licenseOwner;
 const licenseAdmin = users.licenseAdmin;
 
@@ -114,7 +115,7 @@ test('AUT-04: Check downloading product Data Connectivity in Store', async ({
   await downloadProductWebsitePage.downloadAndCheckFileIsDownloaded(7);
 });
 
-test('AUT-05: Check added products in the cart', async ({
+test.only('AUT-05: Check added products in the cart', async ({
   page,
   signInPage,
   purchasedProductsCustomerPortalPage,
@@ -122,40 +123,48 @@ test('AUT-05: Check added products in the cart', async ({
   productsWebsitePage,
   pricingOptionsPage,
 }) => {
-  // const products: ICartProductsModel[] =  [
-  //     {
-  //         productName: 'dbForge Studio for SQL Server',
-  //         quontity: 2,
-  //         edition: 'Standard',
-  //         upgradePeriod: 1,
-  //         unitPrice: 1099.95,
-  //         priority: true,
-  //     },
-  //     {
-  //         productName: 'dotConnect for Oracle',
-  //         quontity: 1,
-  //         edition: 'Standard',
-  //         upgradePeriod: 1,
-  //         unitPrice: 1099.95,
-  //         priority: true,
-  //     },
-  //     {
-  //         productName: 'dbForge SQL Tools',
-  //         quontity: 2,
-  //         edition: 'Standard',
-  //         upgradePeriod: 1,
-  //         unitPrice: 1099.95,
-  //         priority: true,
-  //     },
-  //     {
-  //         productName: 'SSIS Integration Universal Bundle',
-  //         quontity: 1,
-  //         edition: 'Standard',
-  //         upgradePeriod: 1,
-  //         unitPrice: 1099.95,
-  //         priority: true,
-  //     },
-  // ]
+  const products: IProductCartModel[] = [
+    {
+      name: 'dbForge Studio for SQL Server',
+      edition: Edition.Standard,
+      purchaseType: PurchaseType.Perpetual,
+      period: 1,
+      unitPrice: 0,
+      currency: Currency.Dollar,
+      quontity: 5,
+      prioritySupport: true,
+    },
+    {
+      name: 'dotConnect for Oracle',
+      edition: Edition.Standard,
+      purchaseType: PurchaseType.Single,
+      period: 1,
+      unitPrice: 0,
+      currency: Currency.Dollar,
+      quontity: 1,
+      prioritySupport: true,
+    },
+    {
+      name: 'dbForge SQL Tools',
+      edition: Edition.Standard,
+      purchaseType: PurchaseType.Subscription,
+      period: 1,
+      unitPrice: 0,
+      currency: Currency.Dollar,
+      quontity: 1,
+      prioritySupport: true,
+    },
+    {
+      name: 'SSIS Integration Database Bundle',
+      edition: Edition.Standard,
+      purchaseType: PurchaseType.Single,
+      period: 3,
+      unitPrice: 0,
+      currency: Currency.Dollar,
+      quontity: 5,
+      prioritySupport: true,
+    },
+  ];
 
   await homeWebsitePage.open();
   await homeWebsitePage.openSignInPage();
@@ -190,7 +199,7 @@ test('AUT-05: Check added products in the cart', async ({
   await page.locator('.btn-add_cart').first().click();
   await pricingOptionsPage.checkProductAddedToCartSnackbar();
 
-  // await headerWebsiteOfPage.checkProductsInCartStatePopup(products);
+  await page.waitForTimeout(10 * 60 * 1000);
 });
 
 test('AUT-06: Checked creating account, change password, deleting account', async ({

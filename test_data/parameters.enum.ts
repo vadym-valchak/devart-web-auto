@@ -7,4 +7,19 @@ export enum DurationEnum {
 export enum PurchaseType {
   Subscription = 'Subscription',
   Perpetual = 'Perpetual',
+  Single = 'Single',
+  Team = 'Team',
+  Site = 'Site',
+}
+
+export enum Edition {
+  Standard = 'Standard',
+  Professional = 'Professional',
+  Enterprise = 'Enterprise',
+  Developer = 'Developer',
+}
+
+export enum Currency {
+  Dollar = 'Dollar',
+  Euro = 'Euro',
 }

@@ -1,5 +1,5 @@
 import { Locator, Page, expect } from '@playwright/test';
-import { DurationEnum, PurchaseType } from '../../../test_data/parameters.enum';
+import { DurationEnum, Purchase } from '../../../test_data/parameters.enum';
 
 export class PricingOptionsPage {
   private readonly page: Page;
@@ -19,7 +19,7 @@ export class PricingOptionsPage {
   }
 
   async setProductParametersDbForge(
-    purchaseType: PurchaseType,
+    purchaseType: Purchase,
     duration: DurationEnum,
     prioritySuport: boolean,
     quontity: number,
