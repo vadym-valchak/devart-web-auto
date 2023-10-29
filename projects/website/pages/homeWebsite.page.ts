@@ -30,4 +30,9 @@ export class HomeWebsitePage {
     await this.menuHeaderWebsiteSection.openProductsMenuItem();
     return await this.menuProductsWebsiteSection;
   }
+
+  async openCartDropdown() {
+    await this.headerWebsiteSection.openMobileMenu();
+    await this.headerWebsiteSection.cartHeaderWebsiteSection.openCartDropdown();
+  }
 }

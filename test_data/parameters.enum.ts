@@ -18,8 +18,3 @@ export enum Edition {
   Enterprise = 'Enterprise',
   Developer = 'Developer',
 }
-
-export enum Currency {
-  Dollar = 'Dollar',
-  Euro = 'Euro',
-}

@@ -13,6 +13,7 @@ import { ProfileSecureInformationCustomerPortalPage } from '../projects/customer
 import { ProfileDeleteCustomerPortalPage } from '../projects/customer_portal/pages/profileDeleteProfileCustomerPortal.page';
 ('../projects/customer_portal/page/ProfileDeleteCustomerPortalPage');
 import { PricingOptionsPage } from '../projects/website/pages/pricingOptions.page';
+import { ShoppingCartDropdownWebsitePage } from '../projects/website/pages/shoppingCartDropdownWebsite.page';
 
 export interface TestOptions {
   signInPage: SignInPage;
@@ -28,6 +29,7 @@ export interface TestOptions {
   profileSecureInformationCustomerPortalPage: ProfileSecureInformationCustomerPortalPage;
   profileDeleteCustomerPortalPage: ProfileDeleteCustomerPortalPage;
   pricingOptionsPage: PricingOptionsPage;
+  shoppingCartDropdownWebsitePage: ShoppingCartDropdownWebsitePage;
 }
 
 export const test = base.extend<TestOptions>({
@@ -47,4 +49,5 @@ export const test = base.extend<TestOptions>({
     await use(new ProfileSecureInformationCustomerPortalPage(page)),
   profileDeleteCustomerPortalPage: async ({ page }, use) => await use(new ProfileDeleteCustomerPortalPage(page)),
   pricingOptionsPage: async ({ page }, use) => await use(new PricingOptionsPage(page)),
+  shoppingCartDropdownWebsitePage: async ({ page }, use) => await use(new ShoppingCartDropdownWebsitePage(page)),
 });

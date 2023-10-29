@@ -1,10 +1,11 @@
 import { test } from './../fixtures/fixture';
 import { mailHelper } from '../helpers/mail.helper';
 import { expect } from '@playwright/test';
-import { DurationEnum, Edition, PurchaseType, Currency } from '../test_data/parameters.enum';
+import { DurationEnum, Edition, PurchaseType } from '../test_data/parameters.enum';
 import { users } from '../test_data/users';
-import { IProductCartModel } from '../test_data/IProductCart';
- 
+import { IProductCartModel } from '../test_data/models/ICartProducts.model';
+import { ProductCart } from '../test_data/models/productCart';
+
 const licenseOwner = users.licenseOwner;
 const licenseAdmin = users.licenseAdmin;
 
@@ -122,48 +123,53 @@ test.only('AUT-05: Check added products in the cart', async ({
   homeWebsitePage,
   productsWebsitePage,
   pricingOptionsPage,
+  shoppingCartDropdownWebsitePage,
 }) => {
+  const dbForgeStudioForSqlServer = new ProductCart(
+    'dbForge Studio for SQL Server',
+    Edition.Standard,
+    DurationEnum['1 years'],
+    0,
+    null,
+    5,
+    true,
+    PurchaseType.Perpetual,
+  );
+  const dotConnectForOracle = new ProductCart(
+    'dotConnect for Oracle',
+    Edition.Standard,
+    DurationEnum['1 years'],
+    0,
+    null,
+    1,
+    true,
+    null,
+  );
+  const dbForgeSQLTools = new ProductCart(
+    'dbForge SQL Tools',
+    Edition.Standard,
+    DurationEnum['1 years'],
+    0,
+    null,
+    1,
+    true,
+    PurchaseType.Subscription,
+  );
+  const SSISIntegrationDatabaseBundle = new ProductCart(
+    'SSIS Integration Universal Bundle',
+    Edition.Standard,
+    DurationEnum['3 years'],
+    0,
+    null,
+    5,
+    true,
+    null,
+  );
   const products: IProductCartModel[] = [
-    {
-      name: 'dbForge Studio for SQL Server',
-      edition: Edition.Standard,
-      purchaseType: PurchaseType.Perpetual,
-      period: 1,
-      unitPrice: 0,
-      currency: Currency.Dollar,
-      quontity: 5,
-      prioritySupport: true,
-    },
-    {
-      name: 'dotConnect for Oracle',
-      edition: Edition.Standard,
-      purchaseType: PurchaseType.Single,
-      period: 1,
-      unitPrice: 0,
-      currency: Currency.Dollar,
-      quontity: 1,
-      prioritySupport: true,
-    },
-    {
-      name: 'dbForge SQL Tools',
-      edition: Edition.Standard,
-      purchaseType: PurchaseType.Subscription,
-      period: 1,
-      unitPrice: 0,
-      currency: Currency.Dollar,
-      quontity: 1,
-      prioritySupport: true,
-    },
-    {
-      name: 'SSIS Integration Database Bundle',
-      edition: Edition.Standard,
-      purchaseType: PurchaseType.Single,
-      period: 3,
-      unitPrice: 0,
-      currency: Currency.Dollar,
-      quontity: 5,
-      prioritySupport: true,
-    },
+    dbForgeStudioForSqlServer,
+    dotConnectForOracle,
+    dbForgeSQLTools,
+    SSISIntegrationDatabaseBundle,
   ];
 
   await homeWebsitePage.open();
@@ -173,9 +179,16 @@ test.only('AUT-05: Check added products in the cart', async ({
   // Cleare shopping list in the cart
   await page.request.post('https://www.devart.com/api/cart/remove-cart', {});
   await productsWebsitePage.clickViewPricingOptionsForProduct('/dbforge/sql/studio/ordering.html');
-  await pricingOptionsPage.setProductParametersDbForge(PurchaseType.Perpetual, DurationEnum['1 years'], true, 5);
+
+  await pricingOptionsPage.addDbForgeProductToCart(
+    dbForgeStudioForSqlServer.edition,
+    dbForgeStudioForSqlServer.purchaseType,
+    dbForgeStudioForSqlServer.duration,
+    dbForgeStudioForSqlServer.prioritySupport,
+    dbForgeStudioForSqlServer.quantity,
+  );
   // Add product to cart
-  await page.locator('.btn-add_cart').first().click();
+
   await pricingOptionsPage.checkProductAddedToCartSnackbar();
   // Filter products
   await page.goBack();
@@ -192,14 +205,21 @@ test.only('AUT-05: Check added products in the cart', async ({
   // Navigate to Product through Main Menu
   await (await (await homeWebsitePage.openProductsMenu()).openDataConnectivityMenuItem()).menuItem('SSIS Components');
   // Click buy now for 'SSIS Integration Universal Bundle'
-  await page.locator('a[href="universal-bundle/"]').getByText('SSIS Integration Universal Bundle').click();
+  await page.locator('a[href="universal-bundle/"]').getByText(SSISIntegrationDatabaseBundle.name).click();
   await page.locator('.banner-btn').getByText('Buy now').click();
   await page.waitForSelector('.pricing-box');
-  await pricingOptionsPage.setProductParametersSSIS(DurationEnum['3 years'], true, 5);
+  await pricingOptionsPage.setProductParametersSSIS(
+    SSISIntegrationDatabaseBundle.duration,
+    SSISIntegrationDatabaseBundle.prioritySupport,
+    SSISIntegrationDatabaseBundle.quantity,
+  );
   await page.locator('.btn-add_cart').first().click();
   await pricingOptionsPage.checkProductAddedToCartSnackbar();
 
-  await page.waitForTimeout(10 * 60 * 1000);
+  await homeWebsitePage.openCartDropdown();
+  const cartProducts = await shoppingCartDropdownWebsitePage.getProductsList();
+  console.log(cartProducts);
+  // console.log(await shoppingCartDropdownWebsitePage.checkCartProducts(cartProducts, products));
 });
 
 test('AUT-06: Checked creating account, change password, deleting account', async ({
