@@ -1,15 +1,17 @@
-import { Locator, Page, expect } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { HeaderWebsiteSection } from '../sections/headerWebsite.section';
 import { MenuHeaderWebsiteSection } from '../sections/menuHeaderWebsite.section';
 import { MenuProductsWebsiteSection } from '../sections/menu/menuProductsWebsite.section';
+import { BasePage } from './base.page';
 
-export class HomeWebsitePage {
-  private readonly page: Page;
+export class HomeWebsitePage extends BasePage {
+  readonly page: Page;
   private readonly headerWebsiteSection: HeaderWebsiteSection;
   private readonly menuHeaderWebsiteSection: MenuHeaderWebsiteSection;
   private readonly menuProductsWebsiteSection: MenuProductsWebsiteSection;
 
   constructor(page: Page) {
+    super(page);
     this.page = page;
     this.headerWebsiteSection = new HeaderWebsiteSection(page);
     this.menuHeaderWebsiteSection = new MenuHeaderWebsiteSection(page);

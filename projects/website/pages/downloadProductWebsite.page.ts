@@ -1,11 +1,13 @@
-import { Locator, Page, expect } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 import { isFileExist, removeFolder } from '../../../helpers/fileOperations.helper';
+import { BasePage } from './base.page';
 
-export class DownloadProductWebsitePage {
-  private readonly page: Page;
+export class DownloadProductWebsitePage extends BasePage {
+  readonly page: Page;
   readonly downloadDir: string = './downloads/';
 
   constructor(page: Page) {
+    super(page);
     this.page = page;
   }
 

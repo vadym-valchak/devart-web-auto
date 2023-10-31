@@ -1,10 +1,12 @@
 import { Locator, Page, expect } from '@playwright/test';
+import { BasePage } from './base.page';
 
-export class ProductDetailsWebsitePage {
-  private readonly page: Page;
+export class ProductDetailsWebsitePage extends BasePage {
+  readonly page: Page;
   private readonly downloadButtonOnBunner: Locator;
 
   constructor(page: Page) {
+    super(page);
     this.page = page;
     this.downloadButtonOnBunner = page.locator('.banner-group-btn').getByText('Download');
   }

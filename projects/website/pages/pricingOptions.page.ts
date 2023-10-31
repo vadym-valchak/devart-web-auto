@@ -1,15 +1,16 @@
 import { Locator, Page, expect } from '@playwright/test';
-import { DurationEnum, Edition, Purchase } from '../../../test_data/parameters.enum';
+import { DurationEnum, Edition } from '../../../test_data/parameters.enum';
 import { Price } from '../../../test_data/models/price';
 import { IPricesList, IProductCartModel } from '../../../test_data/models/ICartProducts.model';
+import { BasePage } from './base.page';
 
-
-export class PricingOptionsPage {
-  private readonly page: Page;
+export class PricingOptionsPage extends BasePage {
+  readonly page: Page;
   private readonly plusQuontityIcon: Locator;
   private readonly productAddedToCartSnackbar: Locator;
 
   constructor(page: Page) {
+    super(page);
     this.page = page;
     this.plusQuontityIcon = page.locator("button[data-type='plus']");
     this.productAddedToCartSnackbar = page.locator('.show-snackbar');
@@ -33,7 +34,7 @@ export class PricingOptionsPage {
     await this.setDuration(product.duration);
     // need to add checkbox action
     await this.setQuontity(product.quantity);
-    return await this.clickAddToCartButtonAndGetPriceObject(product.edition);
+    return await this.clickAddToCartButtonAndGetPriceObject(product.name);
   }
 
   private async setQuontity(quontity: number) {
@@ -55,7 +56,7 @@ export class PricingOptionsPage {
     await expect(this.productAddedToCartSnackbar).toBeHidden();
   }
 
-  private async clickAddToCartButtonAndGetPriceObject(edition: Edition): Promise<IPricesList> {
+  private async clickAddToCartButtonAndGetPriceObject(edition: Edition | string): Promise<IPricesList> {
     const [response] = await Promise.all([
       this.page.waitForResponse(res => res.url().includes('/api/cart')),
       this.page

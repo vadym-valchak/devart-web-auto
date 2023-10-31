@@ -149,7 +149,7 @@ test.only('AUT-05: Check added products in the cart', async ({
     'dbForge SQL Tools',
     Edition.Standard,
     DurationEnum['1 years'],
-    0,
+    null,
     null,
     1,
     true,
@@ -159,7 +159,7 @@ test.only('AUT-05: Check added products in the cart', async ({
     'SSIS Integration Universal Bundle',
     Edition.Standard,
     DurationEnum['3 years'],
-    0,
+    null,
     null,
     5,
     true,
@@ -177,7 +177,7 @@ test.only('AUT-05: Check added products in the cart', async ({
   await signInPage.login(licenseOwner.email, licenseOwner.password);
   await purchasedProductsCustomerPortalPage.openStore();
   // Cleare shopping list in the cart
-  await page.request.post('https://www.devart.com/api/cart/remove-cart', {});
+  await productsWebsitePage.removeProductsFromCart();
   await productsWebsitePage.clickViewPricingOptionsForProduct('/dbforge/sql/studio/ordering.html');
 
   await pricingOptionsPage.addDbForgeProductToCart(dbForgeStudioForSqlServer);
@@ -185,7 +185,7 @@ test.only('AUT-05: Check added products in the cart', async ({
 
   await pricingOptionsPage.checkProductAddedToCartSnackbar();
   // Filter products
-  await page.goBack();
+  await pricingOptionsPage.goBack();
   await page.waitForSelector('div.store-img');
   await productsWebsitePage.filterProductsByCategory('Data connectivity');
   // Click 'add to cart' button for product 'dotConnect for Oracle'

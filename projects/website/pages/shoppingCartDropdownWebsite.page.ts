@@ -1,17 +1,15 @@
-import { Locator, Page, expect } from '@playwright/test';
+import { Locator, Page } from '@playwright/test';
 import { ProductCart } from '../../../test_data/models/productCart';
 import { PurchaseType, Edition } from '../../../test_data/parameters.enum';
-import {
-  IProductCartModel as ICartProductsModel,
-  IPrice,
-  IPricesList,
-} from '../../../test_data/models/ICartProducts.model';
+import { IProductCartModel as ICartProductsModel, IPrice } from '../../../test_data/models/ICartProducts.model';
 import { Price } from '../../../test_data/models/price';
+import { BasePage } from './base.page';
 
-export class ShoppingCartDropdownWebsitePage {
-  private readonly page: Page;
+export class ShoppingCartDropdownWebsitePage extends BasePage {
+  readonly page: Page;
 
   constructor(page: Page) {
+    super(page);
     this.page = page;
   }
 
