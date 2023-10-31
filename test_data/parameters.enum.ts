@@ -17,4 +17,5 @@ export enum Edition {
   Professional = 'Professional',
   Enterprise = 'Enterprise',
   Developer = 'Developer',
+  'SSIS Integration Database Bundle' = 'SSIS Integration Database Bundle',
 }

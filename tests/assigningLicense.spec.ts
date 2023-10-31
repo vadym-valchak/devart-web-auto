@@ -180,13 +180,7 @@ test.only('AUT-05: Check added products in the cart', async ({
   await page.request.post('https://www.devart.com/api/cart/remove-cart', {});
   await productsWebsitePage.clickViewPricingOptionsForProduct('/dbforge/sql/studio/ordering.html');
 
-  await pricingOptionsPage.addDbForgeProductToCart(
-    dbForgeStudioForSqlServer.edition,
-    dbForgeStudioForSqlServer.purchaseType,
-    dbForgeStudioForSqlServer.duration,
-    dbForgeStudioForSqlServer.prioritySupport,
-    dbForgeStudioForSqlServer.quantity,
-  );
+  await pricingOptionsPage.addDbForgeProductToCart(dbForgeStudioForSqlServer);
   // Add product to cart
 
   await pricingOptionsPage.checkProductAddedToCartSnackbar();
@@ -208,12 +202,8 @@ test.only('AUT-05: Check added products in the cart', async ({
   await page.locator('a[href="universal-bundle/"]').getByText(SSISIntegrationDatabaseBundle.name).click();
   await page.locator('.banner-btn').getByText('Buy now').click();
   await page.waitForSelector('.pricing-box');
-  await pricingOptionsPage.setProductParametersSSIS(
-    SSISIntegrationDatabaseBundle.duration,
-    SSISIntegrationDatabaseBundle.prioritySupport,
-    SSISIntegrationDatabaseBundle.quantity,
-  );
-  await page.locator('.btn-add_cart').first().click();
+  await pricingOptionsPage.addSSISProductToCart(SSISIntegrationDatabaseBundle);
+
   await pricingOptionsPage.checkProductAddedToCartSnackbar();
 
   await homeWebsitePage.openCartDropdown();

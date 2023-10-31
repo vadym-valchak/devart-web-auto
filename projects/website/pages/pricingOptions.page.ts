@@ -2,7 +2,7 @@ import { Locator, Page, expect } from '@playwright/test';
 import { DurationEnum, Edition, Purchase } from '../../../test_data/parameters.enum';
 import { Price } from '../../../test_data/models/price';
 import { IPricesList, IProductCartModel } from '../../../test_data/models/ICartProducts.model';
-import { has } from 'cheerio/lib/api/traversing';
+
 
 export class PricingOptionsPage {
   private readonly page: Page;
@@ -21,18 +21,19 @@ export class PricingOptionsPage {
     await this.setQuontity(quontity);
   }
 
-  async addDbForgeProductToCart(
-    edition: Edition,
-    purchaseType: Purchase,
-    duration: DurationEnum,
-    prioritySuport: boolean,
-    quontity: number,
-  ) {
-    await this.setPurchaseType(purchaseType);
-    await this.setDuration(duration);
+  async addDbForgeProductToCart(product: IProductCartModel) {
+    await this.setPurchaseType(product.purchaseType);
+    await this.setDuration(product.duration);
     // need to add checkbox action
-    await this.setQuontity(quontity);
-    return await this.clickAddToCartButtonAndGetPriceObject(edition);
+    await this.setQuontity(product.quantity);
+    return await this.clickAddToCartButtonAndGetPriceObject(product.edition);
+  }
+
+  async addSSISProductToCart(product: IProductCartModel) {
+    await this.setDuration(product.duration);
+    // need to add checkbox action
+    await this.setQuontity(product.quantity);
+    return await this.clickAddToCartButtonAndGetPriceObject(product.edition);
   }
 
   private async setQuontity(quontity: number) {
