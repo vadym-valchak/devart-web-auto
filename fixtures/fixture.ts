@@ -14,6 +14,7 @@ import { ProfileDeleteCustomerPortalPage } from '../projects/customer_portal/pag
 ('../projects/customer_portal/page/ProfileDeleteCustomerPortalPage');
 import { PricingOptionsPage } from '../projects/website/pages/pricingOptions.page';
 import { ShoppingCartDropdownWebsitePage } from '../projects/website/pages/shoppingCartDropdownWebsite.page';
+import { SISSSubGroupWebsitePage } from '../projects/website/pages/sISSSubGroupWebsite.page';
 
 export interface TestOptions {
   signInPage: SignInPage;
@@ -30,6 +31,7 @@ export interface TestOptions {
   profileDeleteCustomerPortalPage: ProfileDeleteCustomerPortalPage;
   pricingOptionsPage: PricingOptionsPage;
   shoppingCartDropdownWebsitePage: ShoppingCartDropdownWebsitePage;
+  sISSSubGroupWebsitePage: SISSSubGroupWebsitePage;
 }
 
 export const test = base.extend<TestOptions>({
@@ -50,4 +52,5 @@ export const test = base.extend<TestOptions>({
   profileDeleteCustomerPortalPage: async ({ page }, use) => await use(new ProfileDeleteCustomerPortalPage(page)),
   pricingOptionsPage: async ({ page }, use) => await use(new PricingOptionsPage(page)),
   shoppingCartDropdownWebsitePage: async ({ page }, use) => await use(new ShoppingCartDropdownWebsitePage(page)),
+  sISSSubGroupWebsitePage: async ({ page }, use) => await use(new SISSSubGroupWebsitePage(page)),
 });

@@ -16,6 +16,10 @@ export class PricingOptionsPage extends BasePage {
     this.productAddedToCartSnackbar = page.locator('.show-snackbar');
   }
 
+  async waitForPageIsLoaded() {
+    await this.page.waitForSelector('.pricing-box');
+  }
+
   async setProductParametersSSIS(duration: DurationEnum, prioritySuport: boolean, quontity: number) {
     await this.setDuration(duration);
     // need to add checkbox action
@@ -27,14 +31,14 @@ export class PricingOptionsPage extends BasePage {
     await this.setDuration(product.duration);
     // need to add checkbox action
     await this.setQuontity(product.quantity);
-    return await this.clickAddToCartButtonAndGetPriceObject(product.edition);
+    return await this.clickAddToCartButtonAndSetPriceToObject(product.edition);
   }
 
   async addSSISProductToCart(product: IProductCartModel) {
     await this.setDuration(product.duration);
     // need to add checkbox action
     await this.setQuontity(product.quantity);
-    return await this.clickAddToCartButtonAndGetPriceObject(product.name);
+    return await this.clickAddToCartButtonAndSetPriceToObject(product.name);
   }
 
   private async setQuontity(quontity: number) {
@@ -56,7 +60,7 @@ export class PricingOptionsPage extends BasePage {
     await expect(this.productAddedToCartSnackbar).toBeHidden();
   }
 
-  private async clickAddToCartButtonAndGetPriceObject(edition: Edition | string): Promise<IPricesList> {
+  private async clickAddToCartButtonAndSetPriceToObject(edition: Edition | string): Promise<IPricesList> {
     const [response] = await Promise.all([
       this.page.waitForResponse(res => res.url().includes('/api/cart')),
       this.page
@@ -65,10 +69,11 @@ export class PricingOptionsPage extends BasePage {
         .click(),
     ]);
     //Get price of product from API response
-    const unitPrice = (await response.json()).shoppingCartItems[0].basePrice;
-    const unitPriceCurrency = (await response.json()).shoppingCartItems[0].basePriceString;
-    const totalPrice = (await response.json()).shoppingCartItems[0].subtotal;
-    const totalPriceCurrency = (await response.json()).shoppingCartItems[0].subtotalString;
+    const responseData = await response.json();
+    const unitPrice = responseData.shoppingCartItems[0].basePrice;
+    const unitPriceCurrency = responseData.shoppingCartItems[0].basePriceString;
+    const totalPrice = responseData.shoppingCartItems[0].subtotal;
+    const totalPriceCurrency = responseData.shoppingCartItems[0].subtotalString;
     return {
       unitPrice: new Price(unitPrice, unitPriceCurrency),
       totalPrice: new Price(totalPrice, totalPriceCurrency),

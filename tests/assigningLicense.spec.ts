@@ -90,8 +90,8 @@ test('AUT-03: Check downloading trial product in website by unauthorized user', 
   await homeWebsitePage.open();
   // Navigate to Product through Main Menu
   await (await (await homeWebsitePage.openProductsMenu()).openDatabaseToolsMenuItem()).menuItem('SQL Complete');
+  await productWebsitePage.clickDownloadButton();
   // Download trial version product
-  await productWebsitePage.openDownloadPage();
   await downloadProductWebsitePage.downloadProductBuild(0);
   await signUpPage.openSignInPage();
   await signInPage.login(licenseOwner.email, licenseOwner.password);
@@ -112,18 +112,19 @@ test('AUT-04: Check downloading product Data Connectivity in Store', async ({
   // Filter products
   await productsWebsitePage.filterProductsByCategory('Data connectivity');
   // Click download for product 'dotConnect for Oracle'
-  await productsWebsitePage.clickDownloadButtonForProduct('/dotconnect/oracle/download.html');
+  await productsWebsitePage.clickDownloadButtonForProduct('dotConnect for Oracle');
   await downloadProductWebsitePage.downloadAndCheckFileIsDownloaded(7);
 });
 
-test.only('AUT-05: Check added products in the cart', async ({
-  page,
+test('AUT-05: Check added products in the cart', async ({
   signInPage,
   purchasedProductsCustomerPortalPage,
   homeWebsitePage,
   productsWebsitePage,
+  productDetailsWebsitePage,
   pricingOptionsPage,
   shoppingCartDropdownWebsitePage,
+  sISSSubGroupWebsitePage,
 }) => {
   const dbForgeStudioForSqlServer = new ProductCart(
     'dbForge Studio for SQL Server',
@@ -178,32 +179,29 @@ test.only('AUT-05: Check added products in the cart', async ({
   await purchasedProductsCustomerPortalPage.openStore();
   // Cleare shopping list in the cart
   await productsWebsitePage.removeProductsFromCart();
-  await productsWebsitePage.clickViewPricingOptionsForProduct('/dbforge/sql/studio/ordering.html');
-
+  await productsWebsitePage.clickViewPricingOptionsForProduct(dbForgeStudioForSqlServer.name);
   await pricingOptionsPage.addDbForgeProductToCart(dbForgeStudioForSqlServer);
-  // Add product to cart
-
   await pricingOptionsPage.checkProductAddedToCartSnackbar();
   // Filter products
   await pricingOptionsPage.goBack();
-  await page.waitForSelector('div.store-img');
+  await productsWebsitePage.waitForPageIsLoaded();
   await productsWebsitePage.filterProductsByCategory('Data connectivity');
   // Click 'add to cart' button for product 'dotConnect for Oracle'
-  await page.locator('.devart-tooltip').first().click();
-  await pricingOptionsPage.checkProductAddedToCartSnackbar();
+  await productsWebsitePage.addSingleProductToCart(dotConnectForOracle.name);
+  await productsWebsitePage.checkProductAddedToCartSnackbar();
   // Uncheck filtering
-  await productsWebsitePage.filterProductsByCategory('Data connectivity');
+  await productsWebsitePage.doNotFilterProductsByCategory('Data connectivity');
   // Click 'add to cart' button for product 'dotConnect for Oracle'
-  await page.locator('.devart-tooltip').nth(1).click();
-  await expect(await page.locator('.show-snackbar')).toBeVisible();
+  await productsWebsitePage.addSingleProductToCart(dbForgeSQLTools.name);
+  await productsWebsitePage.checkProductAddedToCartSnackbar();
   // Navigate to Product through Main Menu
   await (await (await homeWebsitePage.openProductsMenu()).openDataConnectivityMenuItem()).menuItem('SSIS Components');
   // Click buy now for 'SSIS Integration Universal Bundle'
-  await page.locator('a[href="universal-bundle/"]').getByText(SSISIntegrationDatabaseBundle.name).click();
-  await page.locator('.banner-btn').getByText('Buy now').click();
-  await page.waitForSelector('.pricing-box');
-  await pricingOptionsPage.addSSISProductToCart(SSISIntegrationDatabaseBundle);
 
+  await sISSSubGroupWebsitePage.openProduct(SSISIntegrationDatabaseBundle.name);
+  await productDetailsWebsitePage.clickBuyNowButton();
+  await pricingOptionsPage.waitForPageIsLoaded();
+  await pricingOptionsPage.addSSISProductToCart(SSISIntegrationDatabaseBundle);
   await pricingOptionsPage.checkProductAddedToCartSnackbar();
 
   await homeWebsitePage.openCartDropdown();
@@ -231,6 +229,7 @@ test('AUT-06: Checked creating account, change password, deleting account', asyn
   await homeWebsitePage.openSignInPage();
   await signInPage.openSignUpForm();
   await signUpPage.signUp(name, userEmail, password);
+  // Login if user is exist
   if (await page.locator('#register-account .validation-summary-errors').isVisible()) {
     await signUpPage.openSignInPage();
     await signInPage.login(userEmail, password);
@@ -242,6 +241,7 @@ test('AUT-06: Checked creating account, change password, deleting account', asyn
       await signInPage.login(userEmail, password);
     }
   }
+
   await purchasedProductsCustomerPortalPage.openProfilePage();
   await profilePersonalInformationCustomerPortalPage.openSecureInformationPage();
   await profileSecureInformationCustomerPortalPage.changePassword(password, newPassword, newPassword);

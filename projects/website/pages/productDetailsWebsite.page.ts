@@ -11,8 +11,12 @@ export class ProductDetailsWebsitePage extends BasePage {
     this.downloadButtonOnBunner = page.locator('.banner-group-btn').getByText('Download');
   }
 
-  async openDownloadPage() {
+  async clickDownloadButton() {
     await this.downloadButtonOnBunner.click();
+  }
+
+  async clickBuyNowButton() {
+    await this.page.locator('.banner-btn').getByText('Buy now').click();
   }
 
   async filterProductsByCategory(category: string) {
