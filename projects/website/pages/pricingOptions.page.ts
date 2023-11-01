@@ -26,7 +26,7 @@ export class PricingOptionsPage extends BasePage {
     await this.setQuontity(quontity);
   }
 
-  async addDbForgeProductToCart(product: IProductCartModel) {
+  async addDbForgeProductToCart(product: IProductCartModel): Promise<IPricesList> {
     await this.setPurchaseType(product.purchaseType);
     await this.setDuration(product.duration);
     // need to add checkbox action
@@ -34,7 +34,7 @@ export class PricingOptionsPage extends BasePage {
     return await this.clickAddToCartButtonAndSetPriceToObject(product.edition);
   }
 
-  async addSSISProductToCart(product: IProductCartModel) {
+  async addSSISProductToCart(product: IProductCartModel): Promise<IPricesList> {
     await this.setDuration(product.duration);
     // need to add checkbox action
     await this.setQuontity(product.quantity);
@@ -70,10 +70,10 @@ export class PricingOptionsPage extends BasePage {
     ]);
     //Get price of product from API response
     const responseData = await response.json();
-    const unitPrice = responseData.shoppingCartItems[0].basePrice;
-    const unitPriceCurrency = responseData.shoppingCartItems[0].basePriceString;
-    const totalPrice = responseData.shoppingCartItems[0].subtotal;
-    const totalPriceCurrency = responseData.shoppingCartItems[0].subtotalString;
+    const unitPrice = Number(responseData.shoppingCartItems[0].basePrice);
+    const unitPriceCurrency = responseData.shoppingCartItems[0].basePriceString.substring(0, 1);
+    const totalPrice = Number(responseData.shoppingCartItems[0].subtotal);
+    const totalPriceCurrency = responseData.shoppingCartItems[0].subtotalString.substring(0, 1);
     return {
       unitPrice: new Price(unitPrice, unitPriceCurrency),
       totalPrice: new Price(totalPrice, totalPriceCurrency),

@@ -101,15 +101,15 @@ export class ShoppingCartDropdownWebsitePage extends BasePage {
 
   private async getUnitPrice(productRow: Locator): Promise<IPrice> {
     const value = await productRow.locator('.unit-price');
-    const price = (await value.innerText())?.split(' ').pop()?.slice(1);
-    const currency = (await value.innerText())?.split(' ').pop()?.slice(0, 1);
+    const price = Number((await value.innerText())?.trim().split(' ').pop()?.slice(1));
+    const currency = (await value.innerText())?.trim().split(' ').pop()?.slice(0, 1);
     return new Price(price, currency);
   }
 
   private async getTotalPrice(productRow: Locator): Promise<IPrice> {
     const value = await productRow.locator('.dropdown-shopping-cart__price');
-    const price = (await value.innerText())?.split(' ').pop()?.slice(1);
-    const currency = (await value.innerText())?.split(' ').pop()?.slice(0, 1);
+    const price = Number((await value.innerText())?.trim().split(' ').pop()?.slice(1));
+    const currency = (await value.innerText())?.trim().split(' ').pop()?.slice(0, 1);
     return new Price(price, currency);
   }
 

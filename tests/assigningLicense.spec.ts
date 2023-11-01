@@ -3,7 +3,7 @@ import { mailHelper } from '../helpers/mail.helper';
 import { expect } from '@playwright/test';
 import { DurationEnum, Edition, PurchaseType } from '../test_data/parameters.enum';
 import { users } from '../test_data/users';
-import { IProductCartModel } from '../test_data/models/ICartProducts.model';
+import { IPricesList, IProductCartModel } from '../test_data/models/ICartProducts.model';
 import { ProductCart } from '../test_data/models/productCart';
 
 const licenseOwner = users.licenseOwner;
@@ -116,7 +116,7 @@ test('AUT-04: Check downloading product Data Connectivity in Store', async ({
   await downloadProductWebsitePage.downloadAndCheckFileIsDownloaded(7);
 });
 
-test('AUT-05: Check added products in the cart', async ({
+test.only('AUT-05: Check added products in the cart', async ({
   signInPage,
   purchasedProductsCustomerPortalPage,
   homeWebsitePage,
@@ -126,11 +126,12 @@ test('AUT-05: Check added products in the cart', async ({
   shoppingCartDropdownWebsitePage,
   sISSSubGroupWebsitePage,
 }) => {
+  let price: IPricesList;
   const dbForgeStudioForSqlServer = new ProductCart(
     'dbForge Studio for SQL Server',
     Edition.Standard,
     DurationEnum['1 years'],
-    0,
+    null,
     null,
     5,
     true,
@@ -140,7 +141,7 @@ test('AUT-05: Check added products in the cart', async ({
     'dotConnect for Oracle',
     Edition.Standard,
     DurationEnum['1 years'],
-    0,
+    null,
     null,
     1,
     true,
@@ -180,7 +181,8 @@ test('AUT-05: Check added products in the cart', async ({
   // Cleare shopping list in the cart
   await productsWebsitePage.removeProductsFromCart();
   await productsWebsitePage.clickViewPricingOptionsForProduct(dbForgeStudioForSqlServer.name);
-  await pricingOptionsPage.addDbForgeProductToCart(dbForgeStudioForSqlServer);
+  price = await pricingOptionsPage.addDbForgeProductToCart(dbForgeStudioForSqlServer);
+  await dbForgeStudioForSqlServer.setPrice(price);
   await pricingOptionsPage.checkProductAddedToCartSnackbar();
   // Filter products
   await pricingOptionsPage.goBack();
@@ -201,12 +203,14 @@ test('AUT-05: Check added products in the cart', async ({
   await sISSSubGroupWebsitePage.openProduct(SSISIntegrationDatabaseBundle.name);
   await productDetailsWebsitePage.clickBuyNowButton();
   await pricingOptionsPage.waitForPageIsLoaded();
-  await pricingOptionsPage.addSSISProductToCart(SSISIntegrationDatabaseBundle);
+  const price2 = await pricingOptionsPage.addSSISProductToCart(SSISIntegrationDatabaseBundle);
+  SSISIntegrationDatabaseBundle.setPrice(price2);
   await pricingOptionsPage.checkProductAddedToCartSnackbar();
 
   await homeWebsitePage.openCartDropdown();
   const cartProducts = await shoppingCartDropdownWebsitePage.getProductsList();
   console.log(cartProducts);
+  console.log(products);
   // console.log(await shoppingCartDropdownWebsitePage.checkCartProducts(cartProducts, products));
 });
 
