@@ -1,5 +1,7 @@
 import { Locator, Page, expect } from '@playwright/test';
 import { BasePage } from './base.page';
+import { Price } from '../../../test_data/models/price';
+import { IPricesList, IProductCartModel } from '../../../test_data/models/ICartProducts.model';
 
 export class ProductsWebsitePage extends BasePage {
   readonly page: Page;
@@ -45,11 +47,25 @@ export class ProductsWebsitePage extends BasePage {
     await expect(this.productAddedToCartSnackbar).toBeHidden();
   }
 
-  async addSingleProductToCart(productName: string) {
-    await this.page
-      .locator('.store-products-box', { has: this.page.locator('.all-product-title a').getByText(`${productName}`) })
-      .locator('.devart-tooltip')
-      .click();
+  async addSingleProductToCart(productName: string): Promise<IPricesList> {
+    const [response] = await Promise.all([
+      this.page.waitForResponse(res => res.url().includes('api/store/add-to-cart')),
+      this.page
+        .locator('.store-products-box', { has: this.page.locator('.all-product-title a').getByText(`${productName}`) })
+        .locator('.devart-tooltip')
+        .click(),
+    ]);
+    //Get price of product from API response
+    const responseData = await response.json();
+    const index = responseData.shoppingCartItems.length - 1;
+    const unitPrice = Number(responseData.shoppingCartItems[index].basePrice);
+    const unitPriceCurrency = responseData.shoppingCartItems[index].basePriceString.substring(0, 1);
+    const totalPrice = Number(responseData.shoppingCartItems[index].subtotal);
+    const totalPriceCurrency = responseData.shoppingCartItems[index].subtotalString.substring(0, 1);
+    return {
+      unitPrice: new Price(unitPrice, unitPriceCurrency),
+      totalPrice: new Price(totalPrice, totalPriceCurrency),
+    };
   }
 
   async openProductDetails(productName: string) {

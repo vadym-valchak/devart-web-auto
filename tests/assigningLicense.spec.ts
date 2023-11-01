@@ -189,12 +189,14 @@ test.only('AUT-05: Check added products in the cart', async ({
   await productsWebsitePage.waitForPageIsLoaded();
   await productsWebsitePage.filterProductsByCategory('Data connectivity');
   // Click 'add to cart' button for product 'dotConnect for Oracle'
-  await productsWebsitePage.addSingleProductToCart(dotConnectForOracle.name);
+  price = await productsWebsitePage.addSingleProductToCart(dotConnectForOracle.name);
+  await dotConnectForOracle.setPrice(price);
   await productsWebsitePage.checkProductAddedToCartSnackbar();
   // Uncheck filtering
   await productsWebsitePage.doNotFilterProductsByCategory('Data connectivity');
   // Click 'add to cart' button for product 'dotConnect for Oracle'
-  await productsWebsitePage.addSingleProductToCart(dbForgeSQLTools.name);
+  price = await productsWebsitePage.addSingleProductToCart(dbForgeSQLTools.name);
+  await dbForgeSQLTools.setPrice(price);
   await productsWebsitePage.checkProductAddedToCartSnackbar();
   // Navigate to Product through Main Menu
   await (await (await homeWebsitePage.openProductsMenu()).openDataConnectivityMenuItem()).menuItem('SSIS Components');
@@ -203,8 +205,8 @@ test.only('AUT-05: Check added products in the cart', async ({
   await sISSSubGroupWebsitePage.openProduct(SSISIntegrationDatabaseBundle.name);
   await productDetailsWebsitePage.clickBuyNowButton();
   await pricingOptionsPage.waitForPageIsLoaded();
-  const price2 = await pricingOptionsPage.addSSISProductToCart(SSISIntegrationDatabaseBundle);
-  SSISIntegrationDatabaseBundle.setPrice(price2);
+  price = await pricingOptionsPage.addSSISProductToCart(SSISIntegrationDatabaseBundle);
+  SSISIntegrationDatabaseBundle.setPrice(price);
   await pricingOptionsPage.checkProductAddedToCartSnackbar();
 
   await homeWebsitePage.openCartDropdown();

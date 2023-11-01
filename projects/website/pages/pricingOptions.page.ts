@@ -70,10 +70,11 @@ export class PricingOptionsPage extends BasePage {
     ]);
     //Get price of product from API response
     const responseData = await response.json();
-    const unitPrice = Number(responseData.shoppingCartItems[0].basePrice);
-    const unitPriceCurrency = responseData.shoppingCartItems[0].basePriceString.substring(0, 1);
-    const totalPrice = Number(responseData.shoppingCartItems[0].subtotal);
-    const totalPriceCurrency = responseData.shoppingCartItems[0].subtotalString.substring(0, 1);
+    const index = responseData.shoppingCartItems.length - 1;
+    const unitPrice = Number(responseData.shoppingCartItems[index].basePrice);
+    const unitPriceCurrency = responseData.shoppingCartItems[index].basePriceString.substring(0, 1);
+    const totalPrice = Number(responseData.shoppingCartItems[index].subtotal);
+    const totalPriceCurrency = responseData.shoppingCartItems[index].subtotalString.substring(0, 1);
     return {
       unitPrice: new Price(unitPrice, unitPriceCurrency),
       totalPrice: new Price(totalPrice, totalPriceCurrency),
