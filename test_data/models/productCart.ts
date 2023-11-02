@@ -5,7 +5,7 @@ export class ProductCart implements IProductCartModel {
   name: string;
   edition: Edition;
   purchaseType?: PurchaseType | null;
-  duration: number;
+  duration: DurationEnum;
   unitPrice: IPrice | null;
   totalPrice: IPrice | null;
   quantity: number;

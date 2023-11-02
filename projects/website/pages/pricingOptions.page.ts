@@ -1,5 +1,5 @@
 import { Locator, Page, expect } from '@playwright/test';
-import { DurationEnum, Edition } from '../../../test_data/parameters.enum';
+import { DurationEnum, Edition, PurchaseType } from '../../../test_data/parameters.enum';
 import { Price } from '../../../test_data/models/price';
 import { IPricesList, IProductCartModel } from '../../../test_data/models/ICartProducts.model';
 import { BasePage } from './base.page';
@@ -47,12 +47,20 @@ export class PricingOptionsPage extends BasePage {
     }
   }
 
-  private async setPurchaseType(purchaseType: Purchase) {
+  private async setPurchaseType(purchaseType: PurchaseType) {
     await this.page.locator('.saas-button__text').getByText(purchaseType).click();
   }
 
   private async setDuration(duration: DurationEnum) {
-    await this.page.locator('.slider-horizontal').click({ position: { x: duration, y: 0 } });
+    let duration_x: number = 10;
+    if (duration == DurationEnum['1 year']) {
+      duration_x = 10;
+    } else if (duration == DurationEnum['2 years']) {
+      duration_x = 160;
+    } else if (duration == DurationEnum['3 years']) {
+      duration_x = 320;
+    }
+    await this.page.locator('.slider-horizontal').click({ position: { x: duration_x, y: 0 } });
   }
 
   async checkProductAddedToCartSnackbar() {

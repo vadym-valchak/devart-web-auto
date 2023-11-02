@@ -126,14 +126,13 @@ export class ShoppingCartDropdownWebsitePage extends BasePage {
     return false;
   }
 
-  async checkCartProducts(first_array_of_objects: ICartProductsModel[], second_array_of_objects: ICartProductsModel[]) {
-    return (
-      first_array_of_objects.length === second_array_of_objects.length &&
-      first_array_of_objects.every(element_1 =>
-        second_array_of_objects.some(element_2 =>
-          Object.keys(element_1).every(key => element_1[key] === element_2[key]),
-        ),
-      )
-    );
+  async checkCartProducts(a1: ICartProductsModel[], a2: ICartProductsModel[]) {
+    return a1.length === a2.length && a1.every((o, idx) => this.objectsEqual(o, a2[idx]));
+  }
+
+  objectsEqual(o1, o2) {
+    Object.keys(o1).length > 0
+      ? Object.keys(o1).length === Object.keys(o2).length && Object.keys(o1).every(p => this.objectsEqual(o1[p], o2[p]))
+      : o1 === o2;
   }
 }

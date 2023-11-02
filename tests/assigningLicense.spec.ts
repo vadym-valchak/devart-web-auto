@@ -130,7 +130,7 @@ test.only('AUT-05: Check added products in the cart', async ({
   const dbForgeStudioForSqlServer = new ProductCart(
     'dbForge Studio for SQL Server',
     Edition.Standard,
-    DurationEnum['1 years'],
+    DurationEnum['1 year'],
     null,
     null,
     5,
@@ -140,7 +140,7 @@ test.only('AUT-05: Check added products in the cart', async ({
   const dotConnectForOracle = new ProductCart(
     'dotConnect for Oracle',
     Edition.Standard,
-    DurationEnum['1 years'],
+    DurationEnum['1 year'],
     null,
     null,
     1,
@@ -150,7 +150,7 @@ test.only('AUT-05: Check added products in the cart', async ({
   const dbForgeSQLTools = new ProductCart(
     'dbForge SQL Tools',
     Edition.Standard,
-    DurationEnum['1 years'],
+    DurationEnum['1 year'],
     null,
     null,
     1,
@@ -213,7 +213,7 @@ test.only('AUT-05: Check added products in the cart', async ({
   const cartProducts = await shoppingCartDropdownWebsitePage.getProductsList();
   console.log(cartProducts);
   console.log(products);
-  // console.log(await shoppingCartDropdownWebsitePage.checkCartProducts(cartProducts, products));
+  console.log(await shoppingCartDropdownWebsitePage.checkCartProducts(cartProducts, products));
 });
 
 test('AUT-06: Checked creating account, change password, deleting account', async ({

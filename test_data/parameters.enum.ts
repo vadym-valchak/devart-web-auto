@@ -1,7 +1,7 @@
 export enum DurationEnum {
-  '1 years' = 10,
-  '2 years' = 160,
-  '3 years' = 320,
+  '1 year' = '1 Year',
+  '2 years' = '2 Years',
+  '3 years' = '3 Years',
 }
 
 export enum PurchaseType {
