@@ -116,7 +116,7 @@ test('AUT-04: Check downloading product Data Connectivity in Store', async ({
   await downloadProductWebsitePage.downloadAndCheckFileIsDownloaded(7);
 });
 
-test.only('AUT-05: Check added products in the cart', async ({
+test('AUT-05: Check added products in the cart', async ({
   signInPage,
   purchasedProductsCustomerPortalPage,
   homeWebsitePage,
