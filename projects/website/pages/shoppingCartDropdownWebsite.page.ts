@@ -1,4 +1,4 @@
-import { Locator, Page } from '@playwright/test';
+import { Locator, Page, expect } from '@playwright/test';
 import { ProductCart } from '../../../test_data/models/productCart';
 import { PurchaseType, Edition } from '../../../test_data/parameters.enum';
 import { IProductCartModel as ICartProductsModel, IPrice } from '../../../test_data/models/ICartProducts.model';
@@ -127,12 +127,6 @@ export class ShoppingCartDropdownWebsitePage extends BasePage {
   }
 
   async checkCartProducts(a1: ICartProductsModel[], a2: ICartProductsModel[]) {
-    return a1.length === a2.length && a1.every((o, idx) => this.objectsEqual(o, a2[idx]));
-  }
-
-  objectsEqual(o1, o2) {
-    Object.keys(o1).length > 0
-      ? Object.keys(o1).length === Object.keys(o2).length && Object.keys(o1).every(p => this.objectsEqual(o1[p], o2[p]))
-      : o1 === o2;
+    await expect(JSON.stringify(a1) == JSON.stringify(a2)).toBeTruthy();
   }
 }

@@ -211,9 +211,7 @@ test.only('AUT-05: Check added products in the cart', async ({
 
   await homeWebsitePage.openCartDropdown();
   const cartProducts = await shoppingCartDropdownWebsitePage.getProductsList();
-  console.log(cartProducts);
-  console.log(products);
-  console.log(await shoppingCartDropdownWebsitePage.checkCartProducts(cartProducts, products));
+  await shoppingCartDropdownWebsitePage.checkCartProducts(cartProducts, products);
 });
 
 test('AUT-06: Checked creating account, change password, deleting account', async ({
