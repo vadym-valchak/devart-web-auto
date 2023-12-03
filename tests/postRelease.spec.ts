@@ -1,5 +1,5 @@
-import { test } from './../fixtures/fixture';
-import { mailHelper } from '../helpers/mail.helper';
+import { test } from '../fixtures/fixture';
+import { mailinatorInboxClient } from '../helpers/mail.helper';
 import { expect } from '@playwright/test';
 import { DurationEnum, Edition, PurchaseType } from '../test_data/parameters.enum';
 import { users } from '../test_data/users';
@@ -32,13 +32,10 @@ test('AUT-001: Check assigning and revoking license', async ({
   await licenseDetailsCustomerPortalPage.checkInvitationSnackbar();
   await licenseDetailsCustomerPortalPage.logout();
   // Read email and navigate on link in email
-  const emailHTML = await mailHelper.readEmail(
-    page,
-    'website@devart.com',
-    licenseAdmin.email,
-    'dbForge SQL Tools license has been assigned to you',
-  );
-  const verificationCodeFromEmail = await mailHelper.getJoinYourTeamLink(emailHTML);
+  const emailHTML = await mailinatorInboxClient.getLatestMessageBodyFor(licenseAdmin.email);
+  const verificationCodeFromEmail = await mailinatorInboxClient.getJoinYourTeamLink(emailHTML);
+  await mailinatorInboxClient.deleteAllMessagesForEmail(licenseAdmin.email);
+
   await page.goto(verificationCodeFromEmail);
   await signInPage.login(licenseAdmin.email, licenseAdmin.password);
   await purchasedProductsCustomerPortalPage.openLicenseDetails(productName);
@@ -260,13 +257,10 @@ test('AUT-06: Checked creating account, change password, deleting account', asyn
   //Check snackbar is shown.
   await profileDeleteCustomerPortalPage.checkConfirmEmailIsShown();
   // Read email and navigate on link in email
-  const emailHTML = await mailHelper.readEmail(
-    page,
-    'website@devart.com',
-    userEmail,
-    'Please confirm Devart account deletion',
-  );
-  const verificationCodeFromEmail = await mailHelper.getDeleteAccountLink(emailHTML);
+  const emailHTML = await mailinatorInboxClient.getLatestMessageBodyFor(userEmail);
+  const verificationCodeFromEmail = await mailinatorInboxClient.getDeleteAccountLink(emailHTML);
+  await mailinatorInboxClient.deleteAllMessagesForEmail(userEmail);
+
   await page.goto(verificationCodeFromEmail);
   // Check information that account is deleted
   await expect(await page.locator('.account-deleted__title').getByText('Account deleted successfully')).toBeVisible();

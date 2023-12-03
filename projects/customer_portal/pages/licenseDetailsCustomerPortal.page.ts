@@ -38,7 +38,6 @@ export class LicenseDetailsCustomerPortalPage extends MenuCustomerPortalSection 
       await this.cancelInvitationButton.click();
       await await expect.soft(this.spinner).toBeHidden();
     }
-    await expect(this.assignLicenseInputField).toBeVisible();
     await this.assignLicenseInputField.fill(email);
     await this.assignButton.isEnabled();
     await this.assignButton.click();
